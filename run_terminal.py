@@ -1,5 +1,3 @@
-## python script to run terminal globally
-
 import os
 import subprocess
 import shutil
@@ -7,7 +5,7 @@ import platform
 
 source_file = "terminal.cpp"
 executable = "customTerminal.exe" if platform.system() == "Windows" else "my_terminal"
-bin_dir = r'C:\Users\KIIT0001\OneDrive\Desktop\cpp\khudKaShell'
+bin_dir = os.path.join(".", "bin")  
 
 def compile_code():
     print("Compiling C++ code...")
@@ -39,13 +37,18 @@ def move_executable():
 
     print(f"Checking if destination folder exists: {bin_dir}")
     if not os.path.isdir(bin_dir):
-        print(f"Error: Destination folder '{bin_dir}' does not exist.")
-        return
+        print(f"Destination folder '{bin_dir}' does not exist. Creating it...")
+        try:
+            os.makedirs(bin_dir)
+            print(f"Folder '{bin_dir}' created successfully.")
+        except Exception as e:
+            print(f"Error while creating folder '{bin_dir}': {e}")
+            return
 
     print(f"Attempting to move '{executable}' to '{bin_dir}'...")
     try:
         shutil.move(executable, os.path.join(bin_dir, executable))
-        print(f"The terminal is now accessible globally. Run it using '{executable}'.")
+        print(f"The terminal is now accessible globally. Run it using '{os.path.join(bin_dir, executable)}'.")
     except FileNotFoundError as e:
         print(f"FileNotFoundError: {e}")
     except PermissionError:
